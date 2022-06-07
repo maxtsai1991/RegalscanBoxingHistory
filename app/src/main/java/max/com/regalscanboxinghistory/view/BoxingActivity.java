@@ -17,7 +17,8 @@ import max.com.regalscanboxinghistory.R;
 
 /**
  * 筆記 :
- *  1.   View 畫面 和 元件 處理
+ *  1.  View 畫面 和 元件 處理
+ *  2.  View不直接與Model交互，而是通過與Presenter交互來與Model間接交互
  */
 public class BoxingActivity extends AppCompatActivity {
     /**
