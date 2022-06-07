@@ -17,10 +17,10 @@ allprojects {
         google()
         jcenter()
         maven{
-            // 外調
-            url "http://portal.regalscan.com.tw:8093/repository/maven-public/"
-//            // 內調
-//            url "http://192.168.0.38:8093/repository/maven-public/"
+//            // 外調
+//            url "http://portal.regalscan.com.tw:8093/repository/maven-public/"
+            // 內調
+            url "http://192.168.0.38:8093/repository/maven-public/"
         }
     }
 }

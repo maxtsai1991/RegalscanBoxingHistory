@@ -26,5 +26,10 @@
       <option name="name" value="maven" />
       <option name="url" value="http://portal.regalscan.com.tw:8093/repository/maven-public/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="http://192.168.0.38:8093/repository/maven-public/" />
+    </remote-repository>
   </component>
 </project>
