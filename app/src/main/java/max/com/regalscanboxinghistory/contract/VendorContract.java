@@ -9,8 +9,20 @@ public interface VendorContract {
     }
 
     interface View {
+        void onSuccess(String message);
+        void onError(String message);
+
+        void onAutoModeInfo(String message);
+        void onManualModeInfo(String message);
+
     }
 
     interface Presenter {
+        void boxingInfoNum(String num);
+        void boxingInfoQTY(String quantity);
+
+
+
     }
+
 }

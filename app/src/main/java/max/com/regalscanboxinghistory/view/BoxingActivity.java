@@ -2,25 +2,30 @@ package max.com.regalscanboxinghistory.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import max.com.regalscanboxinghistory.R;
+import max.com.regalscanboxinghistory.contract.VendorContract;
 
 /**
  * 筆記 :
  *  1.  View 畫面 和 元件 處理
  *  2.  View不直接與Model交互，而是通過與Presenter交互來與Model間接交互
  */
-public class BoxingActivity extends AppCompatActivity {
+public class BoxingActivity extends AppCompatActivity implements VendorContract.View {
     /**
      * 返回主選單 , 進入裝箱作業-工作歷程(歷程記錄)
      */
@@ -42,6 +47,14 @@ public class BoxingActivity extends AppCompatActivity {
      * 列印
      */
     private Button bt_print;
+    /**
+     * EditText輸入[號碼]轉字串
+     */
+    private String inputNumStr;
+    /**
+     * EditText輸入[數量]轉字串
+     */
+    private String inputQTYStr;
 
 
     @Override
@@ -98,8 +111,11 @@ public class BoxingActivity extends AppCompatActivity {
         et_num.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-
-
+                if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN){
+                    inputNumStr = et_num.getText().toString().trim();       // EditText輸入[號碼]轉字串
+                    onSuccess("輸入號碼 : " + inputNumStr);
+                    return true;
+                }
                 return false; //回傳 false 表示到這邊結束，回傳 true 則會繼續原本 onKey 定義的動作。
             }
         });
@@ -110,7 +126,20 @@ public class BoxingActivity extends AppCompatActivity {
         et_quantity.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN){
+                    inputQTYStr = et_quantity.getText().toString().trim();  // EditText輸入[數量]轉字串
+                    onSuccess("輸入數量 :" + inputQTYStr);
 
+
+                    /**
+                     * 隱藏鍵盤
+                     */
+                    InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if(inputMethodManager.isActive()){
+                        inputMethodManager.hideSoftInputFromWindow(BoxingActivity.this.getCurrentFocus().getWindowToken(),0);
+                    }
+                    return true;
+                }
                 return false; //回傳 false 表示到這邊結束，回傳 true 則會繼續原本 onKey 定義的動作。
             }
         });
@@ -121,6 +150,11 @@ public class BoxingActivity extends AppCompatActivity {
         cb_no_auto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    onManualModeInfo("【手動】");
+                }else {
+                    onAutoModeInfo("【自動】");
+                }
 
             }
         });
@@ -130,4 +164,23 @@ public class BoxingActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onSuccess(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onAutoModeInfo(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onManualModeInfo(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
 }

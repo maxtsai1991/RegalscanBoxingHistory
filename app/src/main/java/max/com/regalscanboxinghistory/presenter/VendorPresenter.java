@@ -10,5 +10,22 @@ import max.com.regalscanboxinghistory.contract.VendorContract;
  */
 public class VendorPresenter implements VendorContract.Presenter {
 
+    VendorContract.View view;
+
+    public VendorPresenter(VendorContract.View view) {
+        this.view = view;
+    }
+
+
+    @Override
+    public void boxingInfoNum(String num) {
+
+    }
+
+    @Override
+    public void boxingInfoQTY(String quantity) {
+
+    }
+
 
 }
