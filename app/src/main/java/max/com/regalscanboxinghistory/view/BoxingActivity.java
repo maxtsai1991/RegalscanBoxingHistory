@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,8 +18,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import max.com.regalscanboxinghistory.R;
 import max.com.regalscanboxinghistory.contract.VendorContract;
+import max.com.regalscanboxinghistory.model.VendorModel;
+import max.com.regalscanboxinghistory.presenter.VendorPresenter;
 
 /**
  * 筆記 :
@@ -26,6 +31,7 @@ import max.com.regalscanboxinghistory.contract.VendorContract;
  *  2.  View不直接與Model交互，而是通過與Presenter交互來與Model間接交互
  */
 public class BoxingActivity extends AppCompatActivity implements VendorContract.View {
+    VendorContract.Presenter presenter;
     /**
      * 返回主選單 , 進入裝箱作業-工作歷程(歷程記錄)
      */
@@ -55,6 +61,8 @@ public class BoxingActivity extends AppCompatActivity implements VendorContract.
      * EditText輸入[數量]轉字串
      */
     private String inputQTYStr;
+    private Boolean flag = false;
+    private ArrayList<VendorModel> VendorModelList;
 
 
     @Override
@@ -63,6 +71,8 @@ public class BoxingActivity extends AppCompatActivity implements VendorContract.
         setContentView(R.layout.activity_boxing);
         findViews();
         handleClickListener();
+
+        presenter = new VendorPresenter(this);
 
     }
 
@@ -91,6 +101,9 @@ public class BoxingActivity extends AppCompatActivity implements VendorContract.
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(BoxingActivity.this, HistoryActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("VendorModelList", VendorModelList);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -101,7 +114,7 @@ public class BoxingActivity extends AppCompatActivity implements VendorContract.
         bt_print.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                onPrintInfo("PDA將列印之內容拋至後端系統等待列印");
             }
         });
 
@@ -130,6 +143,12 @@ public class BoxingActivity extends AppCompatActivity implements VendorContract.
                     inputQTYStr = et_quantity.getText().toString().trim();  // EditText輸入[數量]轉字串
                     onSuccess("輸入數量 :" + inputQTYStr);
 
+                    if(flag){
+                        VendorModelList = presenter.autoModeNumJudge(inputNumStr,inputQTYStr);
+                    }else{
+                        VendorModelList = presenter.manualMode(inputNumStr,inputQTYStr);
+                    }
+
 
                     /**
                      * 隱藏鍵盤
@@ -152,8 +171,10 @@ public class BoxingActivity extends AppCompatActivity implements VendorContract.
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     onManualModeInfo("【手動】");
+                    flag = false;
                 }else {
                     onAutoModeInfo("【自動】");
+                    flag = true;
                 }
 
             }
@@ -181,6 +202,11 @@ public class BoxingActivity extends AppCompatActivity implements VendorContract.
 
     @Override
     public void onManualModeInfo(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPrintInfo(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

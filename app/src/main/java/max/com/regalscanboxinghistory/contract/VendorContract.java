@@ -1,11 +1,17 @@
 package max.com.regalscanboxinghistory.contract;
 
+import java.util.ArrayList;
+
+import max.com.regalscanboxinghistory.model.VendorModel;
+
 /**
  * 筆記 :
  *  1.   Contract類別，主要是定義View及Presenter之間互動的Interface層
  */
 public interface VendorContract {
     interface Model {
+        String getNum();
+        String getQTY();
     }
 
     interface View {
@@ -15,12 +21,21 @@ public interface VendorContract {
         void onAutoModeInfo(String message);
         void onManualModeInfo(String message);
 
+        void onPrintInfo(String message);
+
     }
 
     interface Presenter {
         void boxingInfoNum(String num);
         void boxingInfoQTY(String quantity);
-
+        /**
+         * 判斷是否同號碼,同號碼則將數量累加 (自動模式)
+         */
+        ArrayList<VendorModel> autoModeNumJudge(String inputNumStr, String inputQTYStr);
+        /**
+         * 手動模式
+         */
+        ArrayList<VendorModel> manualMode(String inputNumStr, String inputQTYStr);
 
 
     }
