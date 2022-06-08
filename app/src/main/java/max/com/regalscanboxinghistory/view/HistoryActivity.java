@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -277,7 +278,6 @@ public class HistoryActivity extends AppCompatActivity {
                         vendorArrayList.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position,vendorArrayList.size());
-                        Toast.makeText(v.getContext(), "已刪除", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -287,7 +287,8 @@ public class HistoryActivity extends AppCompatActivity {
                 alertDialog.setNeutralButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(v.getContext(), "已取消", Toast.LENGTH_SHORT).show();
+                        holder.swipeRevealLayout.close(true); // 刪除動畫
+                        notifyItemRangeChanged(position,vendorArrayList.size());
                     }
                 });
 

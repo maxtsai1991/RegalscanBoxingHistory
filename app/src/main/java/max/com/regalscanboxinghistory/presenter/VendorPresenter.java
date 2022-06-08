@@ -1,5 +1,10 @@
 package max.com.regalscanboxinghistory.presenter;
 
+import android.database.Cursor;
+import android.util.Log;
+
+import com.regalscan.regalutilitylib.DBHelper;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +23,9 @@ public class VendorPresenter implements VendorContract.Presenter {
     VendorContract.View view;
     ArrayList<VendorModel> vendorModelArrayList;
     VendorModel vendorModel;
+    private DBHelper dbHelper;
+    private String TABLE_NAME = "Settings";
+    private String VENDOR_NAME ;
 
     public VendorPresenter(VendorContract.View view) {
         this.view = view;
@@ -25,22 +33,14 @@ public class VendorPresenter implements VendorContract.Presenter {
     }
 
 
-    @Override
-    public void boxingInfoNum(String num) {
-
-    }
-
-    @Override
-    public void boxingInfoQTY(String quantity) {
-
-    }
-
+    /**
+     * 判斷是否同號碼,同號碼則將數量累加 (自動模式)
+     */
     @Override
     public ArrayList<VendorModel> autoModeNumJudge(String inputNumStr, String inputQTYStr) {
         vendorModel = new VendorModel();
         vendorModel.setNum(inputNumStr);
         vendorModel.setQty(inputQTYStr);
-//        ArrayList<VendorModel> vendorModelArrayList = new ArrayList<>();
         vendorModelArrayList.add(vendorModel);
 
         Map<String, VendorModel> map = new HashMap<>();
@@ -65,15 +65,32 @@ public class VendorPresenter implements VendorContract.Presenter {
         return vendorModelArrayList;
     }
 
+    /**
+     * 手動模式
+     */
     @Override
     public ArrayList<VendorModel> manualMode(String inputNumStr, String inputQTYStr) {
         vendorModel = new VendorModel();
         vendorModel.setNum(inputNumStr);
         vendorModel.setQty(inputQTYStr);
-//        vendorModelArrayList = new ArrayList<>();
         vendorModelArrayList.add(vendorModel);
-
         return vendorModelArrayList;
+    }
+
+    @Override
+    public String dbVendorNameInfo() {
+        try {
+            Cursor cursor1 = dbHelper.query("SELECT * FROM" + TABLE_NAME);
+            if (cursor1 != null && cursor1.getCount() >= 0) {
+                while (cursor1.moveToNext()) {
+                    VENDOR_NAME = cursor1.getString(cursor1.getColumnIndexOrThrow("VENDOR_NAME"));
+                    dbHelper.close();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return VENDOR_NAME;
     }
 
 

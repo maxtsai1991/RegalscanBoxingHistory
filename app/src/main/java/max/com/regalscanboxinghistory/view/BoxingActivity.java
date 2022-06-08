@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.regalscan.regalutilitylib.DBHelper;
+
 import java.util.ArrayList;
 
 import max.com.regalscanboxinghistory.R;
@@ -63,6 +65,9 @@ public class BoxingActivity extends AppCompatActivity implements VendorContract.
     private String inputQTYStr;
     private Boolean flag = false;
     private ArrayList<VendorModel> VendorModelList;
+    private final String DB_NAME = "Host.db3";
+    private DBHelper dbHelper;
+
 
 
     @Override
@@ -71,9 +76,8 @@ public class BoxingActivity extends AppCompatActivity implements VendorContract.
         setContentView(R.layout.activity_boxing);
         findViews();
         handleClickListener();
-
         presenter = new VendorPresenter(this);
-
+        dbHelper = new DBHelper(getContentResolver(),"/sdcard/storage/",DB_NAME);
     }
 
     private void findViews() {
@@ -117,7 +121,7 @@ public class BoxingActivity extends AppCompatActivity implements VendorContract.
                 onPrintInfo("PDA將列印之內容拋至後端系統等待列印");
             }
         });
-
+//        tv_vendor_boxing.setText(presenter.dbVendorNameInfo());
         /**
          *  et_num EditText【號碼】監聽事件
          */
@@ -176,12 +180,8 @@ public class BoxingActivity extends AppCompatActivity implements VendorContract.
                     onAutoModeInfo("【自動】");
                     flag = true;
                 }
-
             }
         });
-
-
-
 
     }
 
